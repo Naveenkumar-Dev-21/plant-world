@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant World - Your Guide to Plants and Nature</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Anime.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <!-- html2canvas and jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <div class="floating-leaf leaf-1">🍃</div>
+        <div class="floating-leaf leaf-2">🌿</div>
+        <div class="floating-leaf leaf-3">🍀</div>
+        <div class="floating-leaf leaf-4">🌱</div>
+        <div class="floating-leaf leaf-5">🌸</div>
+        <div class="floating-leaf leaf-6">🍃</div>
+    </div>
+
+    <!-- Homepage Section -->
+    <section id="homepage" class="homepage">
+        <div class="homepage-content">
+            <div class="welcome-text">
+                <h1 class="welcome-line line-1">WELCOME</h1>
+                <h1 class="welcome-line line-2">TO</h1>
+                <h1 class="welcome-line line-3">PLANT WORLD</h1>
+            </div>
+            
+            <button id="click-here-btn" class="click-here-btn">
+                <span>CLICK HERE</span>
+                <i class="fas fa-leaf"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="categories-section">
+        <div class="container">
+            <div class="categories-grid">
+                <!-- Row 1 -->
+                <div class="category-card cat-fruits" data-category="fruits">
+                    <div class="category-icon">🍎</div>
+                    <h3>Fruits</h3>
+                    <p>Explore delicious and nutritious fruits</p>
+                </div>
+                
+                <div class="category-card cat-vegetables" data-category="vegetables">
+                    <div class="category-icon">🥕</div>
+                    <h3>Vegetables</h3>
+                    <p>Discover fresh and healthy vegetables</p>
+                </div>
+                
+                <div class="category-card cat-pulses" data-category="pulses">
+                    <div class="category-icon">🫘</div>
+                    <h3>Pulses</h3>
+                    <p>Learn about protein-rich pulses</p>
+                </div>
+                
+                <!-- Row 2 -->
+                <div class="category-card cat-cereals" data-category="cereals">
+                    <div class="category-icon">🌾</div>
+                    <h3>Cereals</h3>
+                    <p>Explore essential cereal crops</p>
+                </div>
+                
+                <div class="category-card cat-flowers" data-category="flowers">
+                    <div class="category-icon">🌺</div>
+                    <h3>Flowers</h3>
+                    <p>Beautiful and fragrant flowers</p>
+                </div>
+                
+                <div class="category-card cat-nuts" data-category="nuts">
+                    <div class="category-icon">🥜</div>
+                    <h3>Nuts</h3>
+                    <p>Nutritious and crunchy nuts</p>
+                </div>
+                
+                <!-- Row 3 -->
+                <div class="category-card cat-greens" data-category="greens">
+                    <div class="category-icon">🥬</div>
+                    <h3>Greens</h3>
+                    <p>Fresh leafy green vegetables</p>
+                </div>
+                
+                <div class="category-card cat-spices" data-category="spices">
+                    <div class="category-icon">🌶️</div>
+                    <h3>Spices</h3>
+                    <p>Aromatic and flavorful spices</p>
+                </div>
+                
+                <div class="category-card cat-herbs" data-category="herbs">
+                    <div class="category-icon">🌿</div>
+                    <h3>Herbs</h3>
+                    <p>Medicinal and culinary herbs</p>
+                </div>
+                
+                <!-- Row 4 (centered) -->
+                <div class="category-card category-card-centered cat-medicinal" data-category="medicinal_plants">
+                    <div class="category-icon">🌱</div>
+                    <h3>Medicinal Plants</h3>
+                    <p>Healing plants for natural wellness</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Details Section -->
+    <section id="category-details" class="category-details-section" style="display: none;">
+        <div class="container">
+            <!-- Top Bar -->
+            <div class="details-header">
+                <button id="back-btn" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back</span>
+                </button>
+                
+                <h2 id="category-title" class="category-title"></h2>
+                
+                <div class="header-controls">
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Search plants...">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Plant Cards Container -->
+            <div id="plants-container" class="plants-container">
+                <!-- Plant cards will be dynamically generated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Plant Details Modal -->
+    <div id="plant-modal" class="modal" style="display: none;">
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal-content" id="modal-content">
+            <button class="modal-close" id="modal-close-btn" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <img id="modal-plant-image" class="modal-plant-image" alt="Plant image" />
+                <h3 id="modal-plant-name" class="modal-plant-name"></h3>
+                <button id="modal-download-pdf-btn" class="plant-pdf-btn">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Download PDF</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-details"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">Thanks for visiting</p>
+            <div class="footer-decoration">
+                <span>🌿</span>
+                <span>🌱</span>
+                <span>🌿</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
