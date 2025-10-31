@@ -32,119 +32,83 @@
         <div class="floating-leaf leaf-6">🍃</div>
     </div>
 
-    <!-- Homepage Section -->
-    <section id="homepage" class="homepage">
-        <div class="homepage-content">
-            <div class="welcome-text">
-                <h1 class="welcome-line line-1">WELCOME</h1>
-                <h1 class="welcome-line line-2">TO</h1>
-                <h1 class="welcome-line line-3">PLANT WORLD</h1>
-            </div>
-            
-            <button id="click-here-btn" class="click-here-btn">
-                <span>CLICK HERE</span>
-                <i class="fas fa-leaf"></i>
-            </button>
-        </div>
-    </section>
+    <!-- Main App Container -->
+    <div id="app-container" style="opacity: 1; display: block;">
+        <!-- Homepage Section -->
+        <section id="homepage" class="page homepage" style="display: flex;">
+            <div class="homepage-content">
+                <div class="welcome-text">
+                    <h1 class="welcome-line line-1" style="opacity: 1;">WELCOME</h1>
+                    <h1 class="welcome-line line-2" style="opacity: 1;">TO</h1>
+                    <h1 class="welcome-line line-3" style="opacity: 1;">PLANT WORLD</h1>
+                </div>
 
-    <!-- Categories Section -->
-    <section id="categories" class="categories-section">
-        <div class="container">
+                <button id="click-here-btn" class="click-here-btn" style="opacity: 1;">
+                    <span>EXPLORE</span>
+                    <i class="fas fa-leaf"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="categories" class="page categories" style="display: none;">
+            <h2 class="section-title">Explore Plant Categories</h2>
             <div class="categories-grid">
-                <!-- Row 1 -->
-                <div class="category-card cat-fruits" data-category="fruits">
+                <div class="category-card" data-category="fruits">
                     <div class="category-icon">🍎</div>
                     <h3>Fruits</h3>
-                    <p>Explore delicious and nutritious fruits</p>
+                    <p>Explore various fruits</p>
                 </div>
-                
-                <div class="category-card cat-vegetables" data-category="vegetables">
+                <div class="category-card" data-category="vegetables">
                     <div class="category-icon">🥕</div>
                     <h3>Vegetables</h3>
-                    <p>Discover fresh and healthy vegetables</p>
+                    <p>Learn about vegetables</p>
                 </div>
-                
-                <div class="category-card cat-pulses" data-category="pulses">
-                    <div class="category-icon">🫘</div>
-                    <h3>Pulses</h3>
-                    <p>Learn about protein-rich pulses</p>
-                </div>
-                
-                <!-- Row 2 -->
-                <div class="category-card cat-cereals" data-category="cereals">
-                    <div class="category-icon">🌾</div>
-                    <h3>Cereals</h3>
-                    <p>Explore essential cereal crops</p>
-                </div>
-                
-                <div class="category-card cat-flowers" data-category="flowers">
-                    <div class="category-icon">🌺</div>
-                    <h3>Flowers</h3>
-                    <p>Beautiful and fragrant flowers</p>
-                </div>
-                
-                <div class="category-card cat-nuts" data-category="nuts">
-                    <div class="category-icon">🥜</div>
-                    <h3>Nuts</h3>
-                    <p>Nutritious and crunchy nuts</p>
-                </div>
-                
-                <!-- Row 3 -->
-                <div class="category-card cat-greens" data-category="greens">
-                    <div class="category-icon">🥬</div>
-                    <h3>Greens</h3>
-                    <p>Fresh leafy green vegetables</p>
-                </div>
-                
-                <div class="category-card cat-spices" data-category="spices">
-                    <div class="category-icon">🌶️</div>
-                    <h3>Spices</h3>
-                    <p>Aromatic and flavorful spices</p>
-                </div>
-                
-                <div class="category-card cat-herbs" data-category="herbs">
+                <div class="category-card" data-category="herbs">
                     <div class="category-icon">🌿</div>
                     <h3>Herbs</h3>
-                    <p>Medicinal and culinary herbs</p>
+                    <p>Discover medicinal herbs</p>
                 </div>
-                
-                <!-- Row 4 (centered) -->
-                <div class="category-card category-card-centered cat-medicinal" data-category="medicinal_plants">
-                    <div class="category-icon">🌱</div>
+                <div class="category-card" data-category="cereals">
+                    <div class="category-icon">🌾</div>
+                    <h3>Cereals</h3>
+                    <p>Learn about cereals</p>
+                </div>
+                <div class="category-card" data-category="flowers">
+                    <div class="category-icon">🌺</div>
+                    <h3>Flowers</h3>
+                    <p>Beautiful flowers</p>
+                </div>
+                <div class="category-card" data-category="nuts">
+                    <div class="category-icon">🥜</div>
+                    <h3>Nuts</h3>
+                    <p>Various nuts</p>
+                </div>
+                <div class="category-card" data-category="spices">
+                    <div class="category-icon">🌶️</div>
+                    <h3>Spices</h3>
+                    <p>Explore different spices</p>
+                </div>
+                <div class="category-card" data-category="medicinal_plants">
+                    <div class="category-icon">💊</div>
                     <h3>Medicinal Plants</h3>
-                    <p>Healing plants for natural wellness</p>
+                    <p>Plants with medicinal properties</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Category Details Section -->
-    <section id="category-details" class="category-details-section" style="display: none;">
-        <div class="container">
-            <!-- Top Bar -->
-            <div class="details-header">
-                <button id="back-btn" class="back-btn">
+        <!-- Plant Grid Section -->
+        <section id="plant-grid" class="page" style="display: none;">
+            <div class="plant-grid-header">
+                <button id="back-to-categories" class="back-btn">
                     <i class="fas fa-arrow-left"></i>
-                    <span>Back</span>
+                    <span>Back to Categories</span>
                 </button>
-                
-                <h2 id="category-title" class="category-title"></h2>
-                
-                <div class="header-controls">
-                    <div class="search-container">
-                        <input type="text" id="search-input" placeholder="Search plants...">
-                        <i class="fas fa-search search-icon"></i>
-                    </div>
-                </div>
+                <h2 id="plant-grid-title" class="section-title"></h2>
             </div>
-            
-            <!-- Plant Cards Container -->
-            <div id="plants-container" class="plants-container">
-                <!-- Plant cards will be dynamically generated here -->
-            </div>
-        </div>
-    </section>
+            <div id="plant-cards-container" class="plant-cards-container"></div>
+        </section>
+    </div>
 
     <!-- Plant Details Modal -->
     <div id="plant-modal" class="modal" style="display: none;">
