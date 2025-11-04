@@ -3,145 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant World - Your Guide to Plants and Nature</title>
-    
-    <!-- Stylesheets -->
+    <title>Bioinformatics Project</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Anime.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-
-    <!-- html2canvas and jsPDF for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Floating Background Elements -->
-    <div class="floating-elements">
-        <div class="floating-leaf leaf-1">🍃</div>
-        <div class="floating-leaf leaf-2">🌿</div>
-        <div class="floating-leaf leaf-3">🍀</div>
-        <div class="floating-leaf leaf-4">🌱</div>
-        <div class="floating-leaf leaf-5">🌸</div>
-        <div class="floating-leaf leaf-6">🍃</div>
-    </div>
+    <div class="container">
+        <div class="header">
+            <img src="photos/KSRCT_LOGO_2.png" alt="KSR College of Technology">
+        </div>
 
-    <!-- Main App Container -->
-    <div id="app-container" style="opacity: 1; display: block;">
-        <!-- Homepage Section -->
-        <section id="homepage" class="page homepage" style="display: flex;">
-            <div class="homepage-content">
-                <div class="welcome-text">
-                    <h1 class="welcome-line line-1" style="opacity: 1;">WELCOME</h1>
-                    <h1 class="welcome-line line-2" style="opacity: 1;">TO</h1>
-                    <h1 class="welcome-line line-3" style="opacity: 1;">PLANT WORLD</h1>
-                </div>
-
-                <button id="click-here-btn" class="click-here-btn" style="opacity: 1;">
-                    <span>EXPLORE</span>
-                    <i class="fas fa-leaf"></i>
-                </button>
+        <div class="main-content">
+            <h1 class="project-title">Bioinformatics Project</h1>
+            
+            <div class="project-description">
+                <h2>Plant World</h2>
+                <p>Explore the fascinating world of plants and their properties</p>
             </div>
-        </section>
 
-        <!-- Categories Section -->
-        <section id="categories" class="page categories" style="display: none;">
-            <h2 class="section-title">Explore Plant Categories</h2>
-            <div class="categories-grid">
-                <div class="category-card" data-category="fruits">
-                    <div class="category-icon">🍎</div>
-                    <h3>Fruits</h3>
-                    <p>Explore various fruits</p>
-                </div>
-                <div class="category-card" data-category="vegetables">
-                    <div class="category-icon">🥕</div>
-                    <h3>Vegetables</h3>
-                    <p>Learn about vegetables</p>
-                </div>
-                <div class="category-card" data-category="herbs">
-                    <div class="category-icon">🌿</div>
-                    <h3>Herbs</h3>
-                    <p>Discover medicinal herbs</p>
-                </div>
-                <div class="category-card" data-category="cereals">
-                    <div class="category-icon">🌾</div>
-                    <h3>Cereals</h3>
-                    <p>Learn about cereals</p>
-                </div>
-                <div class="category-card" data-category="flowers">
-                    <div class="category-icon">🌺</div>
-                    <h3>Flowers</h3>
-                    <p>Beautiful flowers</p>
-                </div>
-                <div class="category-card" data-category="nuts">
-                    <div class="category-icon">🥜</div>
-                    <h3>Nuts</h3>
-                    <p>Various nuts</p>
-                </div>
-                <div class="category-card" data-category="spices">
-                    <div class="category-icon">🌶️</div>
-                    <h3>Spices</h3>
-                    <p>Explore different spices</p>
-                </div>
-                <div class="category-card" data-category="medicinal_plants">
-                    <div class="category-icon">💊</div>
-                    <h3>Medicinal Plants</h3>
-                    <p>Plants with medicinal properties</p>
-                </div>
+            <button id="explore-btn" class="explore-btn">
+                <span>EXPLORE</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <div class="contributors">
+                <div class="contributor">HARISHMA M</div>
+                <div class="contributor">PAVITHRA M</div>
+                <div class="contributor">NANDHA KISHORE G</div>
+                <div class="batch">Batch [2023]</div>
             </div>
-        </section>
+        </div>
 
-        <!-- Plant Grid Section -->
-        <section id="plant-grid" class="page" style="display: none;">
-            <div class="plant-grid-header">
-                <button id="back-to-categories" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                    <span>Back to Categories</span>
-                </button>
-                <h2 id="plant-grid-title" class="section-title"></h2>
+        <div id="plant-list-section" class="plant-list-section" style="display: none;">
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Search for a plant...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
             </div>
             <div id="plant-cards-container" class="plant-cards-container"></div>
-        </section>
+        </div>
     </div>
-
-    <!-- Plant Details Modal -->
-    <div id="plant-modal" class="modal" style="display: none;">
-        <div class="modal-overlay" id="modal-overlay"></div>
-        <div class="modal-content" id="modal-content">
-            <button class="modal-close" id="modal-close-btn" aria-label="Close">
-                <i class="fas fa-times"></i>
+    
+    <!-- Modal for displaying plant details -->
+    <div id="plant-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div id="plant-details"></div>
+            <button id="download-pdf" class="download-btn">
+                <i class="fas fa-file-pdf"></i>
+                Download PDF
             </button>
-            <div class="modal-header">
-                <img id="modal-plant-image" class="modal-plant-image" alt="Plant image" />
-                <h3 id="modal-plant-name" class="modal-plant-name"></h3>
-                <button id="modal-download-pdf-btn" class="plant-pdf-btn">
-                    <i class="fas fa-file-pdf"></i>
-                    <span>Download PDF</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modal-details"></div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p class="footer-text">Thanks for visiting</p>
-            <div class="footer-decoration">
-                <span>🌿</span>
-                <span>🌱</span>
-                <span>🌿</span>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

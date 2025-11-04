@@ -1,211 +1,157 @@
 document.addEventListener('DOMContentLoaded', () => {
     const app = {
         plantData: null,
+        allPlants: [],
+        currentPlant: null,
 
         init: function() {
+            console.log('Script is running!');
             this.cacheDOMElements();
+            console.log('Main content element:', this.mainContent);
+            if (this.mainContent) {
+                this.mainContent.style.display = 'flex'; // Ensure landing page is visible initially
+            }
             this.addEventListeners();
             this.loadPlantData();
         },
 
         cacheDOMElements: function() {
-            this.appContainer = document.getElementById('app-container');
-            this.homepage = document.getElementById('homepage');
-            this.categoriesSection = document.getElementById('categories');
-            this.plantGridSection = document.getElementById('plant-grid');
-            this.plantGridTitle = document.getElementById('plant-grid-title');
+            this.mainContent = document.querySelector('.main-content');
+            this.plantListSection = document.getElementById('plant-list-section');
             this.plantCardsContainer = document.getElementById('plant-cards-container');
             this.modal = document.getElementById('plant-modal');
-            this.modalContent = document.getElementById('modal-content');
-            this.modalPlantName = document.getElementById('modal-plant-name');
-            this.modalDetails = document.getElementById('modal-details');
-            this.modalCloseBtn = document.getElementById('modal-close-btn');
-            this.modalDownloadPdfBtn = document.getElementById('modal-download-pdf-btn');
-            this.exploreBtn = document.getElementById('click-here-btn');
-            this.backToCategoriesBtn = document.getElementById('back-to-categories');
+            this.closeButton = document.querySelector('.close-button');
+            this.plantDetails = document.getElementById('plant-details');
+            this.downloadPdfBtn = document.getElementById('download-pdf');
+            this.exploreBtn = document.getElementById('explore-btn');
+            this.searchBar = document.getElementById('search-bar');
+            this.searchBtn = document.getElementById('search-btn');
         },
 
         addEventListeners: function() {
-            this.exploreBtn.addEventListener('click', () => this.showCategories());
-            this.categoriesSection.addEventListener('click', (e) => {
-                const categoryCard = e.target.closest('.category-card');
-                if (categoryCard) {
-                    const category = categoryCard.dataset.category;
-                    this.showPlantGrid(category);
-                }
-            });
-            this.backToCategoriesBtn.addEventListener('click', () => this.showCategoriesFromGrid());
-            this.plantCardsContainer.addEventListener('click', (e) => {
-                const plantCard = e.target.closest('.plant-card');
-                if (plantCard) {
-                    const plantName = plantCard.dataset.plantName;
-                    const category = plantCard.dataset.category;
-                    const plant = this.plantData[category].find(p => p.name === plantName);
-                    if (plant) {
-                        this.showPlantModal(plant);
-                    }
-                }
-            });
-            this.modalCloseBtn.addEventListener('click', () => this.closeModal());
+            this.exploreBtn.addEventListener('click', () => this.showPlantList());
+            this.closeButton.addEventListener('click', () => this.closeModal());
             this.modal.addEventListener('click', (e) => {
                 if (e.target === this.modal) {
                     this.closeModal();
                 }
             });
-            this.modalDownloadPdfBtn.addEventListener('click', () => this.generatePDF());
+            this.downloadPdfBtn.addEventListener('click', () => this.generatePDF(this.currentPlant));
+            this.searchBtn.addEventListener('click', () => this.filterPlants());
+            this.searchBar.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    this.filterPlants();
+                }
+            });
+            this.plantCardsContainer.addEventListener('click', (e) => {
+                const plantCard = e.target.closest('.plant-card');
+                if (plantCard) {
+                    const plantName = plantCard.dataset.plantName;
+                    const plant = this.allPlants.find(p => p.name === plantName);
+                    if (plant) {
+                        this.showPlantModal(plant);
+                    }
+                }
+            });
         },
 
         loadPlantData: async function() {
             try {
                 const response = await fetch('plant_data.json');
                 this.plantData = await response.json();
+                this.allPlants = Object.values(this.plantData).flat();
+                this.displayPlants(this.allPlants);
             } catch (error) {
                 console.error('Error loading plant data:', error);
             }
         },
 
-        showCategories: function() {
-            this.homepage.style.display = 'none';
-            this.plantGridSection.style.display = 'none';
-            this.categoriesSection.style.display = 'block';
+        displayPlants: function(plants) {
+            this.plantCardsContainer.innerHTML = plants.map(plant => this.getPlantCardHTML(plant)).join('');
         },
 
-        showCategoriesFromGrid: function() {
-            this.plantGridSection.style.display = 'none';
-            this.categoriesSection.style.display = 'block';
-        },
-
-        showPlantGrid: function(category) {
-            if (!this.plantData || !this.plantData[category]) {
-                console.error('No data for category:', category);
-                return;
-            }
-            this.plantGridTitle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-            this.plantCardsContainer.innerHTML = this.plantData[category].map(plant => this.getPlantCardHTML(plant, category)).join('');
-            this.categoriesSection.style.display = 'none';
-            this.plantGridSection.style.display = 'block';
-        },
-
-        getPlantCardHTML: function(plant, category) {
+        getPlantCardHTML: function(plant) {
             return `
-                <div class="plant-card" data-plant-name="${plant.name}" data-category="${category}">
-                    <h4>${plant.common_name || plant.name}</h4>
+                <div class="plant-card" data-plant-name="${plant.name}">
+                    <h3>${plant.common_name || plant.name}</h3>
                     <p>${plant.medicinal_values || ''}</p>
-                    <button class="view-details-btn">View Details</button>
                 </div>
             `;
         },
 
+        filterPlants: function() {
+            const searchTerm = this.searchBar.value.toLowerCase();
+            const filteredPlants = this.allPlants.filter(plant => {
+                const plantName = (plant.common_name || plant.name).toLowerCase();
+                return plantName.includes(searchTerm);
+            });
+            this.displayPlants(filteredPlants);
+        },
+
         showPlantModal: function(plant) {
             this.currentPlant = plant;
-            this.modalPlantName.textContent = plant.common_name || plant.name;
-            this.modalDetails.innerHTML = this.getPlantDetailsHTML(plant);
-            this.modal.style.display = 'block';
+            this.plantDetails.innerHTML = `
+                <h2>${plant.common_name || plant.name}</h2>
+                <div class="pdf-content-wrapper">
+                    <div class="modal-details-content">
+                        ${this.getPlantDetailsHTML(plant)}
+                    </div>
+                </div>
+            `;
+            this.modal.style.display = 'flex';
         },
 
         getPlantDetailsHTML: function(plant) {
-            return Object.entries(plant).map(([key, value]) => {
-                if (value) {
-                    const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    return `<div class="detail-item"><strong>${formattedKey}:</strong> <span>${value}</span></div>`;
-                }
-                return '';
-            }).join('');
+            const details = [
+                ['Scientific Name', plant.name],
+                ['Common Name', plant.common_name],
+                ['Seasonal Time', plant.seasonal_time],
+                ['Soil Type', plant.soil_type],
+                ['Water Requirement', plant.water_requirement],
+                ['Bio Fertilizers', plant.bio_fertilizers],
+                ['Bio Pesticides', plant.bio_pesticides],
+                ['Medicinal Values', plant.medicinal_values],
+                ['Genomic Sequence', plant.genomic_sequence],
+                ['Ploidy Level', plant.ploidy_level],
+                ['Key Pigments', plant.key_pigments_type_color],
+                ['Physiological Properties', plant.physiological_properties],
+                ['Media', plant.media],
+                ['Hormones', plant.hormones],
+                ['Callus Induction Potential', plant.callus_induction_potential],
+                ['Key Nutritional Components', plant.key_nutritional_components],
+                ['Propagation Method', plant.propagation_method]
+            ];
+
+            return details
+                .filter(([_, value]) => value)
+                .map(([label, value]) => `
+                    <div class="detail-item">
+                        <strong>${label}:</strong>
+                        <span>${value}</span>
+                    </div>
+                `).join('');
         },
 
         closeModal: function() {
             this.modal.style.display = 'none';
         },
 
-        generatePDF: function() {
-            const { jsPDF } = window.jspdf;
-            const plant = this.currentPlant;
-            if (!plant) return;
+        showPlantList: function() {
+            this.mainContent.style.display = 'none';
+            this.plantListSection.style.display = 'block';
+        },
 
-            const doc = new jsPDF();
-            const plantName = plant.common_name || plant.name;
-
-            // Constants for layout
-            const page = {
-                width: 210,
-                height: 297,
-                margins: { top: 15, right: 15, bottom: 20, left: 15 }
+        generatePDF: function(plant) {
+            // Use html2pdf.js for PDF generation
+            const element = this.plantDetails.cloneNode(true);
+            const opt = {
+                margin: 1,
+                filename: 'plant-details.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
-            const contentWidth = page.width - page.margins.left - page.margins.right;
-            const keyColumnWidth = 60;
-            const valueColumnWidth = contentWidth - keyColumnWidth - 5;
-
-            // --- Helper Functions ---
-            const addHeader = () => {
-                doc.setFillColor(46, 125, 50); // Dark Green
-                doc.rect(0, 0, page.width, page.margins.top + 5, 'F');
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(20);
-                doc.setTextColor(255, 255, 255);
-                doc.text(plantName, page.width / 2, page.margins.top, { align: 'center' });
-            };
-
-            const addFooter = () => {
-                const pageCount = doc.internal.getNumberOfPages();
-                for (let i = 1; i <= pageCount; i++) {
-                    doc.setPage(i);
-                    doc.setFontSize(10);
-                    doc.setTextColor(150);
-                    doc.text(`Page ${i} of ${pageCount}`, page.width / 2, page.height - page.margins.bottom + 10, { align: 'center' });
-                }
-            };
-
-            // --- PDF Generation ---
-            let y = page.margins.top + 20;
-
-            const addNewPage = () => {
-                doc.addPage();
-                y = page.margins.top + 20;
-            };
-
-            addHeader();
-
-            for (const [key, value] of Object.entries(plant)) {
-                if (!value) continue;
-
-                const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                const valueText = String(value);
-
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(10);
-                doc.setTextColor(40, 40, 40);
-                const keyLines = doc.splitTextToSize(formattedKey, keyColumnWidth);
-
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(10);
-                doc.setTextColor(80, 80, 80);
-                const valueLines = doc.splitTextToSize(valueText, valueColumnWidth);
-
-                const requiredHeight = Math.max(keyLines.length, valueLines.length) * 6 + 4; // 6 per line, 4 for padding
-
-                if (y + requiredHeight > page.height - page.margins.bottom) {
-                    addNewPage();
-                    addHeader();
-                }
-
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(40, 40, 40);
-                doc.text(keyLines, page.margins.left, y);
-
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(80, 80, 80);
-                doc.text(valueLines, page.margins.left + keyColumnWidth + 5, y);
-
-                y += requiredHeight;
-
-                if (y < page.height - page.margins.bottom - 10) {
-                    doc.setDrawColor(220, 220, 220);
-                    doc.line(page.margins.left, y - 2, page.width - page.margins.right, y - 2);
-                }
-            }
-
-            addFooter();
-            doc.save(`${plantName}.pdf`);
+            html2pdf().set(opt).from(element).save();
         }
     };
 
