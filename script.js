@@ -91,9 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
         showPlantModal: function(plant) {
             this.currentPlant = plant;
             this.plantDetails.innerHTML = `
-                <h2>${plant.common_name || plant.name}</h2>
                 <div class="pdf-content-wrapper">
-                    <div class="modal-details-content">
+                    <div class="pdf-header">
+                        <h2 class="pdf-main-title">${plant.common_name || plant.name}</h2>
+                        ${plant.name ? `<p class="pdf-scientific-name"><em>${plant.name}</em></p>` : ''}
+                    </div>
+                    <div class="pdf-details-grid">
                         ${this.getPlantDetailsHTML(plant)}
                     </div>
                 </div>
@@ -103,31 +106,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         getPlantDetailsHTML: function(plant) {
             const details = [
-                ['Scientific Name', plant.name],
-                ['Common Name', plant.common_name],
-                ['Seasonal Time', plant.seasonal_time],
-                ['Soil Type', plant.soil_type],
-                ['Water Requirement', plant.water_requirement],
-                ['Bio Fertilizers', plant.bio_fertilizers],
-                ['Bio Pesticides', plant.bio_pesticides],
-                ['Medicinal Values', plant.medicinal_values],
-                ['Genomic Sequence', plant.genomic_sequence],
-                ['Ploidy Level', plant.ploidy_level],
-                ['Key Pigments', plant.key_pigments_type_color],
-                ['Physiological Properties', plant.physiological_properties],
-                ['Media', plant.media],
-                ['Hormones', plant.hormones],
-                ['Callus Induction Potential', plant.callus_induction_potential],
-                ['Key Nutritional Components', plant.key_nutritional_components],
-                ['Propagation Method', plant.propagation_method]
+                { label: 'Common Name', value: plant.common_name },
+                { label: 'Scientific Name', value: plant.name },
+                { label: 'Seasonal Time', value: plant.seasonal_time },
+                { label: 'Soil Type', value: plant.soil_type },
+                { label: 'Water Requirement', value: plant.water_requirement },
+                { label: 'Bio Fertilizers', value: plant.bio_fertilizers },
+                { label: 'Bio Pesticides', value: plant.bio_pesticides },
+                { label: 'Medicinal Values', value: plant.medicinal_values },
+                { label: 'Genomic Sequence', value: plant.genomic_sequence },
+                { label: 'Ploidy Level', value: plant.ploidy_level },
+                { label: 'Key Pigments', value: plant.key_pigments_type_color },
+                { label: 'Physiological Properties', value: plant.physiological_properties },
+                { label: 'Media', value: plant.media },
+                { label: 'Hormones', value: plant.hormones },
+                { label: 'Callus Induction Potential', value: plant.callus_induction_potential },
+                { label: 'Key Nutritional Components', value: plant.key_nutritional_components },
+                { label: 'Propagation Method', value: plant.propagation_method }
             ];
 
             return details
-                .filter(([_, value]) => value)
-                .map(([label, value]) => `
-                    <div class="detail-item">
-                        <strong>${label}:</strong>
-                        <span>${value}</span>
+                .filter(item => item.value)
+                .map(item => `
+                    <div class="pdf-detail-item">
+                        <strong>${item.label}:</strong>
+                        <span>${item.value}</span>
                     </div>
                 `).join('');
         },
