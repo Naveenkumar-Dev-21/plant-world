@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             this.downloadPdfBtn.addEventListener('click', () => this.generatePDF(this.currentPlant));
             this.searchBtn.addEventListener('click', () => this.filterPlants());
+            this.searchBar.addEventListener('input', () => this.filterPlants());
             this.searchBar.addEventListener('keyup', (e) => {
                 if (e.key === 'Enter') {
                     this.filterPlants();
@@ -67,12 +68,14 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         displayPlants: function(plants) {
-            this.plantCardsContainer.innerHTML = plants.map(plant => this.getPlantCardHTML(plant)).join('');
+            this.plantCardsContainer.innerHTML = plants.map((plant, index) => this.getPlantCardHTML(plant, index)).join('');
         },
 
-        getPlantCardHTML: function(plant) {
+        getPlantCardHTML: function(plant, index) {
+            const delays = ['delay-1', 'delay-2', 'delay-3', 'delay-4', 'delay-5', 'delay-6', 'delay-7', 'delay-8'];
+            const delayClass = delays[index % delays.length] || '';
             return `
-                <div class="plant-card" data-plant-name="${plant.name}">
+                <div class="plant-card animate pop ${delayClass}" data-plant-name="${plant.name}">
                     <h3>${plant.common_name || plant.name}</h3>
                     <p>${plant.medicinal_values || ''}</p>
                 </div>
@@ -147,12 +150,32 @@ document.addEventListener('DOMContentLoaded', () => {
         generatePDF: function(plant) {
             // Use html2pdf.js for PDF generation
             const element = this.plantDetails.cloneNode(true);
+
+            // Add Google Fonts for calligraphy
+            const link = document.createElement('link');
+            link.href = 'https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script&family=Alex+Brush&family=Cormorant+Garamond&family=Cinzel&family=Playfair+Display&display=swap';
+            link.rel = 'stylesheet';
+            element.appendChild(link);
+
             const opt = {
-                margin: 1,
-                filename: 'plant-details.pdf',
+                margin: [0.3, 0.5, 0.3, 0.5], // top, right, bottom, left - reduced margins
+                filename: `${plant.common_name || plant.name}-certificate.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                html2canvas: {
+                    scale: 1.8, // slightly reduced scale for better fit
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#fefefe',
+                    width: 794, // A4 width in pixels at 96 DPI
+                    height: 1123 // A4 height in pixels at 96 DPI
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'portrait',
+                    compress: true
+                },
+                pagebreak: { mode: 'avoid-all' }
             };
             html2pdf().set(opt).from(element).save();
         }
