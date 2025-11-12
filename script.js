@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
         plantData: null,
         allPlants: [],
         currentPlant: null,
+        currentSlide: 0,
+        totalSlides: 0,
 
         init: function() {
             console.log('Script is running!');
@@ -13,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             this.addEventListeners();
             this.loadPlantData();
+            this.initCarousel();
         },
 
         cacheDOMElements: function() {
@@ -26,6 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
             this.exploreBtn = document.getElementById('explore-btn');
             this.searchBar = document.getElementById('search-bar');
             this.searchBtn = document.getElementById('search-btn');
+
+            // Carousel elements
+            this.carousel = document.querySelector('.carousel');
+            this.carouselContainer = document.querySelector('.carousel-container');
+            this.carouselSlides = document.querySelectorAll('.carousel-slide');
+            this.carouselPrev = document.querySelector('.carousel-prev');
+            this.carouselNext = document.querySelector('.carousel-next');
+            this.carouselIndicators = document.querySelectorAll('.indicator');
         },
 
         addEventListeners: function() {
@@ -54,6 +65,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
+
+            // Carousel event listeners
+            if (this.carouselPrev) {
+                this.carouselPrev.addEventListener('click', () => this.prevSlide());
+            }
+            if (this.carouselNext) {
+                this.carouselNext.addEventListener('click', () => this.nextSlide());
+            }
+            if (this.carouselIndicators) {
+                this.carouselIndicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', () => this.goToSlide(index));
+                });
+            }
         },
 
         loadPlantData: async function() {
@@ -178,6 +202,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 pagebreak: { mode: 'avoid-all' }
             };
             html2pdf().set(opt).from(element).save();
+        },
+
+        initCarousel: function() {
+            if (!this.carouselSlides || this.carouselSlides.length === 0) return;
+
+            this.totalSlides = this.carouselSlides.length;
+            this.showSlide(this.currentSlide);
+
+            // Auto-play carousel
+            setInterval(() => {
+                this.nextSlide();
+            }, 5000); // Change slide every 5 seconds
+        },
+
+        showSlide: function(index) {
+            // Remove active class from all slides and indicators
+            this.carouselSlides.forEach(slide => slide.classList.remove('active'));
+            this.carouselIndicators.forEach(indicator => indicator.classList.remove('active'));
+
+            // Add active class to current slide and indicator
+            this.carouselSlides[index].classList.add('active');
+            this.carouselIndicators[index].classList.add('active');
+
+            // Update transform for smooth transition
+            this.carouselContainer.style.transform = `translateX(-${index * 100}%)`;
+        },
+
+        nextSlide: function() {
+            this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+            this.showSlide(this.currentSlide);
+        },
+
+        prevSlide: function() {
+            this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+            this.showSlide(this.currentSlide);
+        },
+
+        goToSlide: function(index) {
+            this.currentSlide = index;
+            this.showSlide(this.currentSlide);
         }
     };
 
